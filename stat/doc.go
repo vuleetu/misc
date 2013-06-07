@@ -3,4 +3,4 @@
  it also can let developer to writer their own stat
 */
 
-package gostat
+package stat

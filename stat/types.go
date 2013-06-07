@@ -1,4 +1,4 @@
-package gostat
+package stat
 
 import (
     "github.com/vuleetu/web"
