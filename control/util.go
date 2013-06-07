@@ -3,6 +3,7 @@ package control
 import (
     "io"
     "net"
+    "os"
     "strings"
     "encoding/binary"
     "github.com/vuleetu/levelog"
@@ -29,9 +30,28 @@ func SetMaximumCmdLenght(length uint32) {
 }
 
 func start(addr string) {
+    stat, err := os.Stat(addr)
+    if err != nil {
+        if !os.IsNotExist(err) {
+            levelog.Error("Stat", addr, "failed")
+            return
+        }
+    } else {
+        if stat.IsDir() {
+            levelog.Error("Address can not be a folder")
+            return
+        }
+
+        err = os.Remove(addr)
+        if err != nil {
+            levelog.Error("Remove", addr, "failed")
+            return
+        }
+    }
+
     l, err := net.Listen("unix", addr)
     if err != nil {
-        levelog.Error("Listen at unix socket domain with address:", addr, "failed")
+        levelog.Error("Listen at unix socket domain with address:", addr, "failed, error is:", err)
         return
     }
 

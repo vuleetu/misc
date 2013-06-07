@@ -2,7 +2,6 @@ package daemon
 
 import (
     "os"
-    "log"
 )
 
 //#include <unistd.h>
@@ -12,8 +11,17 @@ import (
 import "C"
 
 func Start() {
+    daemon1()
+}
+
+func daemon1() {
+    if C.daemon(1, 0) != 0 {
+        os.Exit(-1)
+    }
+}
+
+func daemon2() {
     p := C.fork()
-    log.Println(p)
     if p > 0 {
         //main process exit
         os.Exit(0)
@@ -24,7 +32,6 @@ func Start() {
     C.setsid()
 
     p = C.fork()
-    log.Println(p)
     if p > 0 {
         //main process exit
         os.Exit(0)
@@ -32,7 +39,7 @@ func Start() {
         os.Exit(1)
     }
 
-    //change working directory
-    C.chdir(C.CString("/tmp"))
-    C.umask(0)
+    ////change working directory
+    //C.chdir(C.CString("/tmp"))
+    //C.umask(0)
 }
