@@ -9,7 +9,7 @@ import (
     "github.com/vuleetu/levelog"
 )
 
-type Callback func() (string, error)
+type Callback func(io.Writer) error
 
 var cmds = map[string]Callback{}
 
@@ -95,18 +95,12 @@ func processCmd(conn net.Conn) {
     }
 
     if fun, ok := cmds[strings.ToLower(string(cmdBuf))]; ok {
-        resp, err := fun()
+        err = fun(conn)
         if err != nil {
             levelog.Error("Command execute failed:", err)
-            conn.Write([]byte("fail"))
             return
         }
 
-        if resp == "" {
-            resp = "done"
-        }
-
-        conn.Write([]byte(resp))
         return
     }
 
