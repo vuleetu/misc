@@ -1,6 +1,7 @@
 package channel
 
 import (
+    "log"
     "reflect"
     "container/list"
 )
@@ -42,8 +43,14 @@ func loop(rc reflect.Value, wc reflect.Value) {
 
 
         idx, v, ok := reflect.Select(tc)
-        if idx == 0 && ok {
-            l.PushBack(v.Interface())
+        if idx == 0 {
+            if ok {
+                l.PushBack(v.Interface())
+            } else {
+                //channel closed
+                log.Println("Read channel closed")
+                break
+            }
         } else if idx == 1 {
             l.Remove(l.Front())
         }
