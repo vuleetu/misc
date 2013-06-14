@@ -1,7 +1,7 @@
 package main
 
 import (
-    "flag"
+    "code.google.com/p/getopt"
     "encoding/binary"
     "io/ioutil"
     "net"
@@ -10,14 +10,19 @@ import (
     "bytes"
 )
 
-var sock = flag.String("sock", "", "UNIX sock file path")
-var cmd = flag.String("cmd", "", "Command will be sent")
+var help = getopt.BoolLong("help", 'h', "Print help")
+var sock = getopt.StringLong("sock", 's', "", "UNIX socket domain address")
+var cmd = getopt.StringLong("cmd", 'c', "", "Command which will be sent")
 
 func main() {
-    flag.Parse()
+    getopt.Parse()
+    if *help {
+        getopt.Usage()
+        return
+    }
 
     if *sock == "" || *cmd == "" {
-        flag.PrintDefaults()
+        getopt.Usage()
         return
     }
 
