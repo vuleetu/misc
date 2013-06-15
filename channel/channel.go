@@ -17,7 +17,13 @@ func NewChan(typ interface{}) (interface{}, interface{}) {
 
     go loop(rc, wc)
 
-    return rc.Interface(), wc.Interface()
+    vprc := reflect.New(reflect.ChanOf(reflect.RecvDir, reflect.TypeOf(typ)))
+    vprc.Elem().Set(rc)
+
+    vpwc := reflect.New(reflect.ChanOf(reflect.SendDir, reflect.TypeOf(typ)))
+    vpwc.Elem().Set(wc)
+
+    return vprc.Elem().Interface(), vpwc.Elem().Interface()
 }
 
 func loop(rc reflect.Value, wc reflect.Value) {
