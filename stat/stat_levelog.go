@@ -1,6 +1,7 @@
 package stat
 
 import (
+    //"fmt"
     "github.com/vuleetu/web"
     "github.com/vuleetu/levelog"
 )
@@ -33,4 +34,19 @@ func levelogStat(ctx *web.Context, log *levelog.LevelLogger) {
     case  <-ch:
         levelog.Info("Error happened")
     }
+}
+
+type WebLog struct{}
+
+func (*WebLog) Println(v ...interface{}) {
+    //levelog.Debug(v...)
+}
+
+func (*WebLog) Print(v ...interface{}) {
+    //levelog.Debug(v...)
+}
+
+func (*WebLog) Printf(f string, v ...interface{}) {
+    //s := fmt.Sprintf(f, v...)
+    //levelog.Debug(s)
 }

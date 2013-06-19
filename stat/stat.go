@@ -18,6 +18,7 @@ func RegisterStat(stat *Stat) {
 
 func run(addr string) {
     s := web.NewServer()
+    s.SetLogger(&WebLog{})
     s.Handle(`/`, listroute)
     s.Handle(`/([^/]+)(/.*)?`, route)
     s.Run(addr)
